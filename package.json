@@ -1,11 +1,22 @@
 {
   "name": "react-light-dialog-modal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight and customizable React modal component",
   "main": "lib/index.js",
-  "keywords": ["react", "modal", "dialog", "lightweight", "customizable", "accessible"],
   "author": "Roy Stéphanie",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "modal",
+    "dialog",
+    "lightweight",
+    "customizable",
+    "accessible"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
   "files": [
     "src",
     "lib",
