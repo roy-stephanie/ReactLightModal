@@ -2,7 +2,6 @@ const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel').default;
 const postcss = require('rollup-plugin-postcss');
-const { terser } = require('rollup-plugin-terser');
 
 module.exports = {
   input: 'src/index.jsx',  // Main entry point of your library
@@ -29,7 +28,6 @@ module.exports = {
       extract: false,  // Prevents extracting CSS into a separate file
       minimize: false, // Prevents minifying the CSS files
     }),
-    terser()  // Minifies the JavaScript code to optimize bundle size
   ],
   external: ['react', 'react-dom'],  // Excludes React and ReactDOM from the final bundle
 };
