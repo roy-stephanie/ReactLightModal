@@ -20,7 +20,7 @@ import './Modal.css';
  *
  * @returns {React.Element} The rendered modal component.
  */
-const Modal = ({id, isOpen, children, className, onClose, ariaLabelledby, ariaDescribedby, size}) => {
+const Modal = ({id, isOpen, children, className, onClose, ariaLabelledby, ariaDescribedby, size = '80%'}) => {
   useEffect(() => {
     if (isOpen) {
       /**
@@ -114,10 +114,6 @@ Modal.propTypes = {
   ariaLabelledby: PropTypes.string.isRequired,
   ariaDescribedby: PropTypes.string.isRequired,
   size: PropTypes.string,
-};
-
-Modal.defaultProps = {
-  size: '80%',
 };
 
 export default Modal;
