@@ -80,7 +80,7 @@ const Modal = (
   if (!visible) return null;
 
   return ReactDOM.createPortal(
-    <div className={`modal-container-position ${isOpen ? 'open' : 'close'}`}>
+    <div className={`modal-container-position ${isOpen ? 'modal-open' : 'modal-close'}`}>
       <div
         ref={modalRef}
         id={id}
@@ -92,7 +92,7 @@ const Modal = (
         tabIndex="-1"
         style={{width: determineSize(size)}}
       >
-        <div id="modal-container" className="modal-container">
+        <div id={id} className="modal-container">
           <div className="modal-content">
             <button onClick={onClose} className="modal-close">
               X
