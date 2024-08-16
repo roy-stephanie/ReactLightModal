@@ -33,6 +33,16 @@ const Modal = (
   const modalRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
+  // Handle modal visibility transition
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+    } else {
+      const timeout = setTimeout(() => setVisible(false), 300); // Match the duration of your CSS transition
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     if (isOpen) {
       const handleClickOutside = (event) => {
