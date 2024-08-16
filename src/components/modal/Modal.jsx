@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import {CSSTransition} from 'react-transition-group';
 import './Modal.css';
 
 /**
  * The Modal component is a customizable and accessible modal dialog box.
- * It handles opening and closing animations using `react-transition-group`.
+ * It handles opening and closing animations without relying on react-transition-group to avoid findDOMNode warnings.
  * The modal can be customized in size and style, and it supports ARIA attributes for accessibility.
  *
  * @param {string} id - A unique identifier for the modal element.
@@ -20,26 +19,38 @@ import './Modal.css';
  *
  * @returns {React.Element} The rendered modal component.
  */
-const Modal = ({id, isOpen, children, className, onClose, ariaLabelledby, ariaDescribedby, size = '80%'}) => {
+const Modal = (
+  {
+    id,
+    isOpen,
+    children,
+    className,
+    onClose,
+    ariaLabelledby,
+    ariaDescribedby,
+    size = '80%',
+  }) => {
+  const modalRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  // Handle modal visibility transition
   useEffect(() => {
     if (isOpen) {
-      /**
-       * Handles closing the modal when a click occurs outside the modal content.
-       *
-       * @param {MouseEvent} event - The mouse event triggered by the click.
-       */
+      setVisible(true);
+    } else {
+      const timeout = setTimeout(() => setVisible(false), 300); // Match the duration of your CSS transition
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       const handleClickOutside = (event) => {
-        const modalElement = document.getElementById('modal-container');
-        if (modalElement && !modalElement.contains(event.target)) {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
           onClose();
         }
       };
 
-      /**
-       * Handles closing the modal when the Escape key is pressed.
-       *
-       * @param {KeyboardEvent} event - The keyboard event triggered by the key press.
-       */
       const handleKeyDown = (event) => {
         if (event.key === 'Escape') {
           onClose();
@@ -56,12 +67,6 @@ const Modal = ({id, isOpen, children, className, onClose, ariaLabelledby, ariaDe
     }
   }, [isOpen, onClose]);
 
-  /**
-   * Determines the width of the modal based on the `size` prop.
-   *
-   * @param {string|number} size - The size value passed to the component.
-   * @returns {string} The calculated width in pixels or percentage.
-   */
   const determineSize = (size) => {
     if (typeof size === 'number') {
       return `${size}px`;
@@ -72,37 +77,33 @@ const Modal = ({id, isOpen, children, className, onClose, ariaLabelledby, ariaDe
     }
   };
 
-  const modalContent = (
-    <div className="modal-container-position">
-      <CSSTransition
-        in={isOpen}
-        timeout={300}
-        classNames="modal"
-        unmountOnExit
-        onExited={() => onClose()}
+  if (!visible) return null;
+
+  return ReactDOM.createPortal(
+    <div className={`modal-container-position ${isOpen ? 'open' : 'close'}`}>
+      <div
+        ref={modalRef}
+        id={id}
+        className={`modal ${className}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={ariaLabelledby}
+        aria-describedby={ariaDescribedby}
+        tabIndex="-1"
+        style={{width: determineSize(size)}}
       >
-        <div
-          id={id}
-          className={`modal ${className}`}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={ariaLabelledby}
-          aria-describedby={ariaDescribedby}
-          tabIndex="-1"
-          style={{width: determineSize(size)}}
-        >
-          <div id="modal-container" className="modal-container">
-            <div className="modal-content">
-              <button onClick={onClose} className="modal-close">X</button>
-              {children}
-            </div>
+        <div id="modal-container" className="modal-container">
+          <div className="modal-content">
+            <button onClick={onClose} className="modal-close">
+              X
+            </button>
+            {children}
           </div>
         </div>
-      </CSSTransition>
-    </div>
+      </div>
+    </div>,
+    document.body
   );
-
-  return ReactDOM.createPortal(modalContent, document.body);
 };
 
 Modal.propTypes = {
