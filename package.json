@@ -1,6 +1,6 @@
 {
   "name": "react-light-dialog-modal",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A lightweight and customizable React modal component",
   "main": "lib/index.js",
   "author": "Roy Stéphanie",
