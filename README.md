@@ -65,3 +65,34 @@ The determineSize function dynamically calculates the width of the modal based o
 ## Rendering
 The content of the modal is rendered using ReactDOM.createPortal, allowing it to be placed outside the main React component hierarchy, typically at the root of the document body.
 This ensures that the modal appears above other content without disrupting the page layout.
+
+## How to use
+```bash
+import { Modal } from "react-light-dialog-modal";
+
+const MyComponent = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
+  return (
+    <Modal
+        id="modalId"
+        className={"class"}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        size={70}
+        ariaDescribedby={"modalDescribedby"}
+        ariaLabelledby={"modalariaLabelledby"}
+      >
+        Modal Content
+    </Modal>
+  )
+}
+```
